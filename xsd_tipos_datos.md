@@ -1,7 +1,7 @@
 
-## Tipos de datos en XSD (XML Schema)
+# Tipos de datos en XSD (XML Schema)
 
-### 1. Tipos de texto
+## 1. Tipos de texto
 
 | Tipo XSD              | Significado                              | Ejemplo válido                         |
 | --------------------- | ---------------------------------------- | -------------------------------------- |
@@ -21,7 +21,7 @@
 
 ---
 
-### 2. Tipos numéricos
+## 2. Tipos numéricos
 
 | Tipo XSD                | Significado                    | Ejemplo |
 | ----------------------- | ------------------------------ | ------- |
@@ -36,7 +36,7 @@
 
 ---
 
-### 3. Tipos booleanos
+## 3. Tipos booleanos
 
 | Tipo XSD     | Significado  | Ejemplo válido    |
 | ------------ | ------------ | ----------------- |
@@ -44,7 +44,7 @@
 
 ---
 
-### 4. Tipos de fecha y tiempo
+## 4. Tipos de fecha y tiempo
 
 | Tipo XSD        | Significado    | Ejemplo             |
 | --------------- | -------------- | ------------------- |
@@ -58,7 +58,7 @@
 
 ---
 
-### 5. Tipos binarios
+## 5. Tipos binarios
 
 | Tipo XSD          | Significado                          | Ejemplo                      |
 | ----------------- | ------------------------------------ | ---------------------------- |
@@ -67,7 +67,7 @@
 
 ---
 
-### 6. Tipos especiales
+## 6. Tipos especiales
 
 | Tipo XSD    | Significado                         | Ejemplo     |
 | ----------- | ----------------------------------- | ----------- |
