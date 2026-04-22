@@ -576,3 +576,148 @@ Permite definir el formato mediante expresiones regulares.
   * atributo: `moneda="EUR"`
 
 ---
+
+## 8. Reutilización entre esquemas → `xs:import` y `ref`
+
+Cuando trabajamos con XML complejos, es habitual dividir la información en varios **esquemas XSD** independientes (por ejemplo: personas, direcciones, productos, etc.).
+
+Para poder utilizar elementos definidos en otros esquemas, se utilizan `xs:import` y `ref`.
+
+### 8.1. `xs:import`
+
+Permite **usar definiciones de otro XSD que pertenece a un namespace distinto**.
+
+```xml
+<xs:import namespace="http://empresa.com/personas" schemaLocation="personas.xsd"/>
+```
+
+👉 Clave:
+
+* `namespace` → namespace que queremos importar
+* `schemaLocation` → fichero XSD donde está definido
+
+👉 Solo se usa cuando los esquemas tienen **namespaces diferentes**.
+
+### 8.2. `ref`
+
+Permite **utilizar un elemento que ya ha sido definido en otro esquema**.
+
+```xml
+<xs:element ref="per:persona"/>
+```
+
+👉 Clave:
+
+* `ref` → reutiliza un elemento existente
+* se usa con prefijo (`per`) porque pertenece a otro namespace
+
+### 8.3. Diferencia entre `name` y `ref`
+
+|                                 | `name` | `ref` |
+| ------------------------------- | ------ | ----- |
+| Define un elemento nuevo        | ✔      | ❌     |
+| Reutiliza un elemento existente | ❌      | ✔     |
+| Permite usar otros namespaces   | ❌      | ✔     |
+
+### 8.4. Ejemplo sencillo
+
+Supongamos que existe un esquema `personas.xsd` que define el elemento `<persona>`.
+
+En otro esquema podemos hacer:
+
+```xml
+<xs:import namespace="http://empresa.com/personas" schemaLocation="personas.xsd"/>
+
+<xs:element name="registro">
+    <xs:complexType>
+        <xs:sequence>
+            <xs:element ref="per:persona"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:element>
+```
+
+👉 De esta forma no es necesario volver a definir el elemento `persona`.
+
+### 8.5. Idea clave
+
+> `xs:import` permite usar otros esquemas
+> `ref` permite reutilizar sus elementos
+
+---
+
+## 9. Tipos de datos personalizados → `xs:simpleType`
+
+Permiten crear **tipos de datos propios con restricciones**, que se pueden reutilizar en distintos elementos o atributos.
+
+### 9.1. Definición de un tipo personalizado
+
+```xml
+<xs:simpleType name="nivelType">
+    <xs:restriction base="xs:string">
+        <xs:enumeration value="bajo"/>
+        <xs:enumeration value="medio"/>
+        <xs:enumeration value="alto"/>
+    </xs:restriction>
+</xs:simpleType>
+```
+
+👉 Se ha creado un tipo llamado `nivelType`.
+
+### 9.2. Uso en un elemento
+
+```xml
+<xs:element name="nivel" type="nivelType"/>
+```
+
+### 9.3. Uso en un atributo
+
+```xml
+<xs:attribute name="nivel" type="nivelType"/>
+```
+
+### 9.4. Ejemplo con patrón
+
+```xml
+<xs:simpleType name="codigoType">
+    <xs:restriction base="xs:string">
+        <xs:pattern value="[A-Z]{3}-[0-9]{4}"/>
+    </xs:restriction>
+</xs:simpleType>
+```
+
+👉 Ejemplo válido: `ABC-1234`
+
+### 9.5. Ejemplo con números
+
+```xml
+<xs:simpleType name="notaType">
+    <xs:restriction base="xs:decimal">
+        <xs:minInclusive value="0"/>
+        <xs:maxInclusive value="10"/>
+    </xs:restriction>
+</xs:simpleType>
+```
+
+### 9.6. Ventajas
+
+* ✔ Permiten reutilizar reglas
+* ✔ Hacen el esquema más claro
+* ✔ Evitan repetir código
+* ✔ Facilitan el mantenimiento
+
+### 9.7. Importante
+
+* Solo se usan con **datos simples** (texto, números, fechas…)
+* No pueden contener:
+
+  * elementos hijos
+  * atributos
+
+👉 Para eso se utiliza `xs:complexType`
+
+### 9.8. Idea clave
+
+> `xs:simpleType` permite definir tipos de datos personalizados con restricciones y reutilizarlos en todo el esquema.
+
+---
