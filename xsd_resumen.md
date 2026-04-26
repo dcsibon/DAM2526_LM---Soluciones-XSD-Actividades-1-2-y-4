@@ -646,11 +646,22 @@ En otro esquema podemos hacer:
 
 ---
 
-## 9. Tipos de datos personalizados → `xs:simpleType`
+## 9. Tipos de datos personalizados
+
+Permiten definir nuevos tipos de datos adaptados a nuestras necesidades.
+
+Hay dos tipos:
+
+* `xs:simpleType` → para **texto con restricciones**
+* `xs:complexType` → para **estructuras con elementos y/o atributos**
+
+### 9.1. Tipos simples personalizados → `xs:simpleType`
 
 Permiten crear **tipos de datos propios con restricciones**, que se pueden reutilizar en distintos elementos o atributos.
 
-### 9.1. Definición de un tipo personalizado
+Se utilizan cuando un elemento contiene **solo texto**, pero queremos limitar sus valores.
+
+#### Definición de un tipo personalizado
 
 ```xml
 <xs:simpleType name="nivelType">
@@ -664,19 +675,19 @@ Permiten crear **tipos de datos propios con restricciones**, que se pueden reuti
 
 👉 Se ha creado un tipo llamado `nivelType`.
 
-### 9.2. Uso en un elemento
+#### Uso en un elemento
 
 ```xml
 <xs:element name="nivel" type="nivelType"/>
 ```
 
-### 9.3. Uso en un atributo
+#### Uso en un atributo
 
 ```xml
 <xs:attribute name="nivel" type="nivelType"/>
 ```
 
-### 9.4. Ejemplo con patrón
+#### Ejemplo con patrón
 
 ```xml
 <xs:simpleType name="codigoType">
@@ -688,7 +699,7 @@ Permiten crear **tipos de datos propios con restricciones**, que se pueden reuti
 
 👉 Ejemplo válido: `ABC-1234`
 
-### 9.5. Ejemplo con números
+#### Ejemplo con números
 
 ```xml
 <xs:simpleType name="notaType">
@@ -699,25 +710,107 @@ Permiten crear **tipos de datos propios con restricciones**, que se pueden reuti
 </xs:simpleType>
 ```
 
-### 9.6. Ventajas
+## 9.2. Tipos complejos personalizados → `xs:complexType`
+
+Permiten definir estructuras con:
+
+* elementos hijos
+* atributos
+* o ambos
+
+👉 Se usan cuando una estructura:
+
+* es compleja
+* se repite
+* o queremos organizar mejor el XSD
+
+#### Ejemplo con atributos
+
+```xml
+<xs:complexType name="tipoCliente">
+    <xs:attribute name="id" type="xs:string" use="required"/>
+    <xs:attribute name="nombre" type="xs:string" use="required"/>
+</xs:complexType>
+```
+
+Uso:
+
+```xml
+<xs:element name="cliente" type="tipoCliente"/>
+```
+
+#### Ejemplo con elementos hijos
+
+```xml
+<xs:complexType name="tipoProducto">
+    <xs:sequence>
+        <xs:element name="nombre" type="xs:string"/>
+        <xs:element name="precio" type="tipoPrecio"/>
+    </xs:sequence>
+</xs:complexType>
+```
+
+#### Ejemplo con hijos + atributos
+
+```xml
+<xs:complexType name="tipoPedido">
+    <xs:sequence>
+        <xs:element name="producto" type="tipoProducto" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="estado" type="tipoEstadoPedido" use="required"/>
+</xs:complexType>
+```
+
+#### Uso de los tipos personalizados
+
+Aquí tenéis un ejemplo del uso de los tipos anteriormente definidos: `tipoCliente` y `tipoPedido`:  
+
+```xml
+<xs:element name="tienda">
+    <xs:complexType>
+        <xs:sequence>
+            <xs:element name="cliente" type="tipoCliente"/>
+            <xs:element name="pedido" type="tipoPedido"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:element>
+```
+
+## 9.3. Orden de definición
+
+En XSD, los tipos personalizados:
+
+* pueden definirse **antes o después de ser usados**
+* siempre que tengan `name="..."`
+
+👉 Ejemplo válido:
+
+```xml
+<xs:element name="producto" type="tipoProducto"/>
+
+<xs:complexType name="tipoProducto">
+    ...
+</xs:complexType>
+```
+
+#### Recomendación
+
+Aunque el orden no afecta a la validación, se recomienda:
+
+1. Definir primero los tipos
+2. Usarlos después
+
+## 9.4. Relación con programación
+
+* `xs:complexType` → clase / estructura
+* `xs:element` → objeto / instancia
+* `xs:simpleType` → tipo primitivo restringido
+
+### 9.5. Ventajas
 
 * ✔ Permiten reutilizar reglas
 * ✔ Hacen el esquema más claro
 * ✔ Evitan repetir código
 * ✔ Facilitan el mantenimiento
-
-### 9.7. Importante
-
-* Solo se usan con **datos simples** (texto, números, fechas…)
-* No pueden contener:
-
-  * elementos hijos
-  * atributos
-
-👉 Para eso se utiliza `xs:complexType`
-
-### 9.8. Idea clave
-
-> `xs:simpleType` permite definir tipos de datos personalizados con restricciones y reutilizarlos en todo el esquema.
 
 ---
